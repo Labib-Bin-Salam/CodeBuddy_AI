@@ -5,8 +5,10 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 # आपकी API Key यहाँ पहले से है, मैंने बस उसे सुरक्षित फॉर्मेट में रखा है
+api_key = os.getenv("AIzaSyBs4WrcJn4WS8Lo87Aw_aaH9j5c4l7lmhs")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY environment variable is not set.")
 genai.configure(api_key="AIzaSyBs4WrcJn4WS8Lo87Aw_aaH9j5c4l7lmhs")
-
 
 # मॉडल का नाम 'gemini-1.5-flash' रखें, यह सबसे स्टेबल है
 # यह अपने आप सही मॉडल ढूंढ लेगा
@@ -18,6 +20,7 @@ def get_active_model():
             return model_item.name
 
     raise RuntimeError("No compatible Gemini model found.")
+
 
 active_model = get_active_model()
 model = genai.GenerativeModel(active_model)
