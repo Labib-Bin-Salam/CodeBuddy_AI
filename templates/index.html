@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarBot AI</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #0e1117; color: white; text-align: center; padding: 50px; }
+        .chat-box { background: #1a1c23; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        input { width: 80%; padding: 10px; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #response { margin-top: 20px; color: #00ffcc; }
+    </style>
+</head>
+<body>
+    <h1>🤖 CodeBuddy AI</h1>
+    <div class="chat-container">
+    <h2>CodeBuddy AI 🔥</h2>
+
+    <div id="chat-box">
+        <div id="response"></div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Ask me anything...">
+    <button onclick="askAI()">Ask AI</button> 
+    <button onclick="changeTheme()" style="background: #00d2ff; margin-left: 10px;">Change Theme 🎨</button>
+</div>
+</div>
+
+    <script>
+    let currentTheme = 0;
+    const themes = [
+        { bg: "linear-gradient(135deg, #1e3c72, #2a5298)", box: "rgba(255, 255, 255, 0.1)" },
+        { bg: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)", box: "rgba(0, 210, 255, 0.1)" },
+        { bg: "linear-gradient(135deg, #1d976c, #93f9b9)", box: "rgba(255, 255, 255, 0.2)" },
+        { bg: "linear-gradient(135deg, #eb3349, #f45c43)", box: "rgba(0, 0, 0, 0.3)" }
+    ];
+
+    function changeTheme() {
+        currentTheme = (currentTheme + 1) % themes.length;
+        document.body.style.background = themes[currentTheme].bg;
+        document.querySelector('.chat-container').style.background = themes[currentTheme].box;
+    }
+
+    async function askAI() {
+        const msg = document.getElementById('userInput').value;
+        const res = await fetch('/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        
+        const responseElement = document.getElementById('response');
+        const replyText = data.reply;
+        let i = 0;
+        responseElement.innerHTML = ""; 
+
+        function typeWriter() {
+            if (i < replyText.length) {
+                responseElement.innerHTML += replyText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 20);
+                document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+            }
+        }
+        typeWriter();
+
+        // वॉयस आउटपुट
+        // --- 4. वॉयस आउटपुट (स्मार्ट मोड - नो इमोजी!) ---
+        let speech = new SpeechSynthesisUtterance();
+        
+        // यह लाइन टेक्स्ट में से इमोजी को हटा देगी ताकि AI उनका नाम न बोले
+        let cleanText = replyText.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+        
+        speech.text = cleanText;
+        speech.lang = 'hi-IN';
+        speech.rate = 1.2; // बोलने की रफ़्तार (इसे आप 1.3 भी कर सकते हैं अगर और तेज़ चाहिए)
+
+        // सिस्टम में मौजूद बेस्ट हिंदी आवाज़ चुनना
+        let voices = window.speechSynthesis.getVoices();
+        let hindiVoice = voices.find(voice => voice.lang.includes('hi-IN'));
+        if (hindiVoice) {
+            speech.voice = hindiVoice;
+        }
+
+        window.speechSynthesis.cancel(); // अगर पहले से कुछ बोल रहा है तो उसे रोकें
+        window.speechSynthesis.speak(speech);
+    }
+</script>
+</body>
+</html>

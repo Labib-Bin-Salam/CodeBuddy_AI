@@ -1,0 +1,91 @@
+body {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.chat-container {
+    width: 450px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h2 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #00d2ff;
+}
+
+#chat-box {
+    background: rgba(0, 0, 0, 0.2); /* हल्का काला बैकग्राउंड */
+    padding: 15px;
+    border-radius: 10px;
+    height: 400px;
+    overflow-y: auto; /* अगर जवाब लम्बा हो तो स्क्रॉल आ जाए */
+    display: block;   /* ताकि टेक्स्ट सही से दिखे */
+}
+
+.message {
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 15px;
+    max-width: 80%;
+    line-height: 1.4;
+}
+
+.user-msg {
+    background: #00d2ff;
+    align-self: flex-end;
+    color: black;
+    font-weight: bold;
+}
+
+.bot-msg {
+    background: rgba(255, 255, 255, 0.2);
+    align-self: flex-start;
+    border-left: 4px solid #00d2ff;
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+button {
+    background: #00d2ff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #3a7bd5;
+    transform: scale(1.05);
+}
+#response {
+    white-space: pre-wrap; /* इससे लाइन और स्पेस एकदम सही दिखेंगे */
+    word-wrap: break-word;
+    column-wrap: white;
+    line-height: 1.5;
+}
